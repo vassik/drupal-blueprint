@@ -15,13 +15,13 @@ E.G :  Apply patches, invoke security updates etc. <br>
 
 # !!!!!!! Prerequisites (my notes for an Amazon deployment)
 - aws-blueprint.yaml is modified to perform deployment on aws <br>
-Note:
+Note:<br>
 access id and key have to be provided to create deployment<br>
 - prior to deployment, we need to make sure that the Cloudify manager is run in the same VPC as a VPC of the target deployment <br> 
-Note:
+Note:<br>
 Cloudify adds its own security group in addition to a security group for the current deployment therefore all security groups should belong to the same VPC <br>
 - we need to configure networks, vpc and specify their ids in the aws-blueprint.yaml <br>
-Note:
+Note: <br>
 there are two networks, one public and one private <br>
 In Amazon terms, a network public if it is connected to an internet gateway <br>
 A public network has access to internet, a routing table for the public network should route traffic (0.0.0.0/0) to the internet gateway. <br>
@@ -30,6 +30,11 @@ A private network does not have route to an internet gateway. <br>
 To access internet from the private network, we need to create a NAT Gateway. <br>
 The NAT Gateway should have IP address in the public network. <br>
 A routing table for the private network should route traffic (0.0.0.0/0) to the NAT Gateway. <br> 
+
+ISSUES:<br>
+An elastic IP address is not assosiated with the node in the public network early, therefor an installation of the apache fails (cannot downloadsome packages from internet, i.e. no access to internet since the public ip is not associated with node). <br>
+If we route all trafic (0.0.0.0/0) via NAT in the public network (aka private network), then the apache node won't be available from outside even though it has an elastic IP address (as a workaround, we simply change the route from the NAT interface to the Internet Gateway, once the deployment is done). <br>
+
 
 # Tested Version
 
