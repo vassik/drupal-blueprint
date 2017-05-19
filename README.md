@@ -13,6 +13,24 @@ E.G :  Apply patches, invoke security updates etc. <br>
 - An Ubuntu 14.04 image id from your OpenStack account and from your vSphere account <br>
 - An flavor image id of your choice from your OpenStack account <br>
 
+# !!!!!!! Prerequisites (my notes for an Amazon deployment)
+- aws-blueprint.yaml is modified to perform deployment on aws <br>
+Note:
+access id and key have to be provided to create deployment<br>
+- prior to deployment, we need to make sure that the Cloudify manager is run in the same VPC as a VPC of the target deployment <br> 
+Note:
+Cloudify adds its own security group in addition to a security group for the current deployment therefore all security groups should belong to the same VPC <br>
+- we need to configure networks, vpc and specify their ids in the aws-blueprint.yaml <br>
+Note:
+there are two networks, one public and one private <br>
+In Amazon terms, a network public if it is connected to an internet gateway <br>
+A public network has access to internet, a routing table for the public network should route traffic (0.0.0.0/0) to the internet gateway. <br>
+If a node in a public network does not have a public IP, the node will not have access to internet from the network. <br>
+A private network does not have route to an internet gateway. <br>
+To access internet from the private network, we need to create a NAT Gateway. <br>
+The NAT Gateway should have IP address in the public network. <br>
+A routing table for the private network should route traffic (0.0.0.0/0) to the NAT Gateway. <br> 
+
 # Tested Version
 
 This blueprint has been test with Cloudify version 3.4.0 and with Drupal 7.
